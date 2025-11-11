@@ -3,10 +3,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
 */
 /* Fondo general */
-body {
-  background-color: #433E3F;
-  color: #fff; /* si usas fondo oscuro */
+
+html, body {
+    height: 100%;
 }
+
+body {
+    background-color: #433E3F;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1; /* Esto empuja el footer al fondo */
+}
+
+footer {
+    margin-top: auto;
+}
+
 
 /* Textos y títulos */
 h1, h2, h3, h4, h5, h6 {
@@ -83,18 +100,18 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== Tabla del carrito ===== */
 
-#tablaCarrito {
+#tablaCustom {
   background-color: #dfdfdf;
   border-radius: 10px;
   overflow: hidden;
 }
 
-#tablaCarrito th {
+#tablaCustom th {
   background-color: #bdb7b1;
   color: #000;
 }
 
-#tablaCarrito td {
+#tablaCustom td {
   background-color: #f2f2f2;
   border-color: #bcbcbc;
 }
