@@ -1,7 +1,0 @@
-ferreteria\service\CarritoService.class
-ferreteria\domain\Producto.class
-ferreteria\ProjectConfig.class
-ferreteria\domain\CarritoItem.class
-ferreteria\repository\ProductoRepository.class
-ferreteria\controller\CarritoController.class
-ferreteria\FerreteriaApplication.class
