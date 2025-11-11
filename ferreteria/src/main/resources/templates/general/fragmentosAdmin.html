@@ -25,8 +25,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="container">
 
                     <!-- Titulo -->
-                    <a class="navbar-brand fw-bold d-flex align-items-center" th:href="@{/inicio/buscar}">
-                        <i class="fa-solid fa-screwdriver-wrench me-2"></i> FERRETERIA
+                    <a class="navbar-brand fw-bold d-flex align-items-center" th:href="@{/general/fragmentosAdmin}">
+                        <i class="fa-solid fa-screwdriver-wrench me-2"></i> FERRETERIA (Admin)
                     </a>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav">
@@ -35,46 +35,29 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                     <div class="collapse navbar-collapse" id="topNav">
 
-                        <!-- Buscador -->
-                        <!--
-                        <form class="d-flex mx-auto" th:action="@{/productos/buscar}" method="get" style="max-width: 480px;">
-                            <input class="form-control me-2" type="search" name="nombre"
-                                   placeholder="Buscar productos..."
-                                   th:value="${nombre}">
-                                <button class="btn btn-outline-light" type="submit">
+                        <!-- Buscador 
+                        <form class="d-flex mx-auto" role="search" style="max-width: 520px;">
+                            <input class="form-control me-2" type="search" placeholder="Barra de búsqueda..." aria-label="Buscar">
+                                <button class="btn btn-outline-secondary" type="button">
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                         </form>
                         -->
-                        <form class="d-flex mx-auto" th:action="@{/productos/buscar}" method="get" style="max-width: 480px;">
-                            <input class="form-control me-2" type="search" name="nombre"
-                                   placeholder="Buscar productos..." th:value="${nombre}">
-                                <button class="btn btn-outline-light" type="submit">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
-                        </form>
 
                         <!-- Menú derecho -->
                         <ul class="navbar-nav ms-auto align-items-lg-center">
 
-                            <!-- Categorías -->
-                            <li class="nav-item dropdown me-3">
-                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Categorías</a>
+                         
+                            
+                            <li class="nav-item dropdown me-2">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Gestionar</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Electricidad</a></li>
-                                    <li><a class="dropdown-item" href="#">Plomería</a></li>
-                                    <li><a class="dropdown-item" href="#">Construcción</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/gestionar/listadoProductos}">Productos</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/pedidos}">Pedidos</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/registrarAdmins/registrarAdmin}">Nuevo Administrador</a></li>
                                 </ul>
                             </li>
-
-                            <!-- Carrito -->
-                            <li class="nav-item">
-                                <a id="btnCarrito" class="btn position-relative" th:href="@{/carrito/listado}">
-                                    <i class="fa-solid fa-cart-shopping"></i>
-                                    <span class="ms-1">Carrito</span>
-                                </a>
-                            </li>
-
+                            
                             <li class="nav-item">
                                 <a id="btnSalir" class="btn position-relative" th:href="@{/}">
                                     <i class="fa-solid fa-right-from-bracket"></i>
@@ -95,9 +78,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <small>Ferretería · Derechos Reservados 2025</small>
             </div>
         </footer>
-
-        <!-- Toasts reutilizables -->
+        <!--
         <section th:fragment="mostrarToast">
-        </section>
+        </section>-->
     </body>
 </html>

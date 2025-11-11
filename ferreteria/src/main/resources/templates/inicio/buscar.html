@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <main class="container my-5">
+            <h2 class="mb-4 text-center">Catálogo de productos</h2>
+
+            <!--<form class="d-flex justify-content-center mb-4" th:action="@{/productos/buscar}" method="get">
+                <input class="form-control me-2 w-50" type="text" name="nombre"
+                       placeholder="Ingrese el nombre del producto"
+                       th:value="${nombre}">
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                </button>
+            </form>
+            -->
+
+            <div class="row g-4">
+                <div class="col-md-4" th:each="producto : ${productos}">
+                    <div class="card h-100 shadow-sm">
+                        <img th:src="${producto.rutaImagen} ?: @{/img/placeholder.png}" class="card-img-top" alt="Imagen del producto">
+                        <div class="card-body text-center">
+                            <h5 class="card-title" th:text="${producto.nombre}">Nombre del producto</h5>
+                            <p class="card-text text-muted" th:text="${#numbers.formatDecimal(producto.precio, 1, 'COMMA', 2, 'POINT')}">0.00</p>
+                            <a th:href="@{/productos/detalle/{id}(id=${producto.idProducto})}" class="btn btn-outline-secondary btn-sm">
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(productos)}" class="alert alert-warning text-center mt-4">
+                No se encontraron productos con ese nombre.
+            </div>
+            <!--
+            <div class="alert alert-warning text-center"
+                 th:if="${searchPerformed} and ${#lists.isEmpty(productos)}">
+                No se encontraron productos con ese nombre.
+            </div>
+            -->
+        </main>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>

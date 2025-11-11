@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.thymeleaf.org">
+  <head th:replace="~{general/fragmentos :: head}">
+    <title>Ferretería</title>
+  </head>
+  <body>
+    <header th:replace="~{general/fragmentos :: header}"></header>
+
+    <main class="container my-5">
+      <h1 class="h3 mb-4">Bienvenido(a) a la Ferretería</h1>
+
+      <!-- Ejemplo: carrusel simple con imágenes reales -->
+      <div id="catCarousel1" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-inner">
+          <div class="carousel-item active text-center">
+            <img th:src="@{/img/llave-inglesa.jpg}" class="d-block mx-auto img-fluid rounded" alt="Llave inglesa”" style="max-height:300px;">
+            <div class="mt-2 text-white-50 small">Llave Inglesa 10” — Código 101</div>
+          </div>
+          <div class="carousel-item text-center">
+            <img th:src="@{/img/taladro.jpg}" class="d-block mx-auto img-fluid rounded" alt="Taladro" style="max-height:300px;">
+            <div class="mt-2 text-white-50 small">Taladro Percutor — Código 202</div>
+          </div>
+          <div class="carousel-item text-center">
+            <img th:src="@{/img/dados-metricos.jpg}" class="d-block mx-auto img-fluid rounded" alt="Set dados" style="max-height:300px;">
+            <div class="mt-2 text-white-50 small">Set Dados Métricos — Código 303</div>
+          </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#catCarousel1" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#catCarousel1" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Siguiente</span>
+        </button>
+      </div>
+
+      
+    </main>
+
+    <footer th:replace="~{general/fragmentos :: footer}"></footer>
+  </body>
+</html>
