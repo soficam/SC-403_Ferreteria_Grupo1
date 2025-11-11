@@ -5,18 +5,15 @@
 
 package ferreteria.repository;
 
-
-import ferreteria.domain.Producto;
+import ferreteria.domain.Usuario;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+/**
+ *
+ * @author enano
+ */
 
-public interface ProductoRepository extends JpaRepository<Producto, Long> {
-    
-    // Devuelve solo los productos con estado = true
-    List<Producto> findByEstadoTrue();
-    
-    // Búsqueda por nombre o parte del nombre
-    public List<Producto> findByNombreContainingIgnoreCase(String nombre);
-    
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    Usuario findByNombreUsuario(String nombreUsuario);
 }

@@ -40,11 +40,13 @@ public class Producto implements Serializable {
     @Min(value = 0, message = "Las existencias deben ser un número mayor o igual a 0.")
     private Integer existencias;
 
-    @Column(name = "ruta_imagen", length = 1024)
+    @Column(name = "imagen_ruta", length = 1024)
     private String rutaImagen;
 
-    private boolean activo = true;
+    @Column(nullable = false)
+    private boolean estado = true;
 
-    @Column(name = "id_categoria")
-    private Integer idCategoria;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_categoria")
+    private Categoria categoria;
 }

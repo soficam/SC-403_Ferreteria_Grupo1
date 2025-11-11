@@ -105,21 +105,21 @@ public class CarritoService {
                 "Llave Inglesa 10\"",
                 new BigDecimal("1700.00"),
                 1,
-                "/static/img/demo/llave.png"   // opcional, puede ser null
+                "/img/llave-inglesa.jpg"
         ));
         map.put(202L, new CarritoItem(
                 202L,
                 "Galón Pintura Lanco",
                 new BigDecimal("34200.00"),
                 1,
-                "/static/img/demo/pintura.png"
+                "/img/pintura.jpg"
         ));
         map.put(303L, new CarritoItem(
                 303L,
                 "Brocha Atlas #3",
                 new BigDecimal("3100.00"),
                 2,
-                "/static/img/demo/brocha.png"
+                "/img/brocha-atlas.jpg"
         ));
 
         session.setAttribute(KEY, map);
