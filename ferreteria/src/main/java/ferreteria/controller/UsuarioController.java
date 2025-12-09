@@ -7,6 +7,7 @@ package ferreteria.controller;
 
 import ferreteria.domain.Usuario;
 import ferreteria.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,14 +28,16 @@ public class UsuarioController {
     @PostMapping("/entrar")
     public String procesarLogin(@RequestParam("username") String username,
                                  @RequestParam("password") String password,
-                                 Model model) {
+                                 Model model,
+                                 HttpSession session) {
         Usuario usuario = usuarioService.validarCredenciales(username, password);
         if (usuario != null) {
+            session.setAttribute("usuarioActual", usuario);
             model.addAttribute("usuario", usuario);
             if ("admin".equalsIgnoreCase(usuario.getRol())) {
-                return "redirect:/general/fragmentosAdmin";
+                return "redirect:/admin";
             } else {
-                return "redirect:/inicio/buscar";
+                return "redirect:/inicio";
             }
         } else {
             model.addAttribute("error", "Credenciales inválidas");

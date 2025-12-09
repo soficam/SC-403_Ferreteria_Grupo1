@@ -1,25 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package ferreteria.controller;
 
+import ferreteria.service.ProductoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
 
-    @GetMapping("/inicio/buscar")
-    public String vistaCliente() {
-        return "inicio/buscar";
+    @Autowired
+    private ProductoService productoService;
+
+    // Vista principal del cliente (CATÁLOGO)
+    
+    @GetMapping("/inicio")
+    public String vistaCliente(Model model) {
+
+        model.addAttribute("productos", productoService.getProductos());
+        model.addAttribute("productosPorAgotarse", productoService.getProductosPorAgotarse());
+
+        return "inicio/buscar";  // catálogo
     }
 
-    @GetMapping("/general/fragmentosAdmin")
-    public String vistaAdmin() {
-        return "general/fragmentosAdmin";
+    // Vista principal del Administrador
+    @GetMapping("/admin")
+    public String vistaAdmin(Model model) {
+
+        model.addAttribute("productos", productoService.getProductos());
+        model.addAttribute("productosPorAgotarse", productoService.getProductosPorAgotarse());
+
+        return "inicio/inicioAdmin"; // pantalla admin
     }
 }
+

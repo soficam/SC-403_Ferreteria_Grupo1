@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ferreteria.controller;
 
 import ferreteria.domain.Producto;
@@ -27,80 +23,148 @@ public class ProductoController {
 
     @Autowired
     private MessageSource messageSource;
-    
+
     @Autowired
     private CategoriaService categoriaService;
 
+    // ==================================================
+    // CARGA NOTIFICACIONES (productos con existencias ≤ 10)
+    // ==================================================
+    private void cargarNotificaciones(Model model) {
+
+        // Usamos el método del service para obtenerlos YA filtrados
+        var bajas = productoService.getProductosPorAgotarse();
+
+        model.addAttribute("notificacionesBajas", bajas);
+        model.addAttribute("totalNotificaciones", bajas.size());
+    }
+
+
+    // ==================================================
+    // LISTAR PRODUCTOS
+    // ==================================================
+    /*
+    @GetMapping("/listadoProductos") public String listado(Model model) { 
+        var productos = productoService.getProductos(); 
+        model.addAttribute("productos", productos); 
+        model.addAttribute("totalProductos", productos.size()); 
+        
+        cargarNotificaciones(model); 
+        
+        return "gestionar/listadoProductos"; 
+    }*/
+    
     @GetMapping("/listadoProductos")
     public String listado(Model model) {
         var productos = productoService.getProductos();
         model.addAttribute("productos", productos);
         model.addAttribute("totalProductos", productos.size());
+        // Ya NO llamas a cargarNotificaciones aquí
         return "gestionar/listadoProductos";
     }
 
-    //Mostrar productos
+
+
+    // ==================================================
+    // DETALLE DE PRODUCTO
+    // ==================================================
     @GetMapping("/detalle/{id}")
     public String detalle(@PathVariable("id") Long id, Model model, RedirectAttributes ra) {
         Optional<Producto> productoOpt = productoService.getProducto(id);
+
         if (productoOpt.isEmpty()) {
-            ra.addFlashAttribute("error", messageSource.getMessage("producto.error01", null, "El producto no existe.", Locale.getDefault()));
+            ra.addFlashAttribute("error",
+                    messageSource.getMessage("producto.error01", null,
+                            "El producto no existe.", Locale.getDefault()));
             return "redirect:/gestionar/listadoProductos";
         }
+
         model.addAttribute("producto", productoOpt.get());
+        cargarNotificaciones(model);
+
         return "gestionar/detalle";
     }
 
-    //Añadir nuevos productos
+    // ==================================================
+    // AGREGAR PRODUCTO
+    // ==================================================
     @GetMapping("/agregar")
     public String agregar(Model model) {
         model.addAttribute("producto", new Producto());
         model.addAttribute("categorias", categoriaService.listarActivas());
-        return "gestionar/modifica"; 
+
+        cargarNotificaciones(model);
+
+        return "gestionar/modifica";
     }
 
-    //Guardar o actualizar
+    // ==================================================
+    // GUARDAR O ACTUALIZAR
+    // ==================================================
     @PostMapping("/guardar")
-    public String guardar(@Valid @ModelAttribute("producto") Producto producto, BindingResult br, RedirectAttributes ra, Model model) {
+    public String guardar(@Valid @ModelAttribute("producto") Producto producto,
+                          BindingResult br,
+                          RedirectAttributes ra,
+                          Model model) {
 
         if (br.hasErrors()) {
             model.addAttribute("categorias", categoriaService.listarActivas());
+            cargarNotificaciones(model);
             return "gestionar/modifica";
         }
 
         productoService.saveOrUpdate(producto);
+
         ra.addFlashAttribute("todoOk",
-                messageSource.getMessage("mensaje.actualizado", null, "Se realizó la actualización.", Locale.getDefault()));
+                messageSource.getMessage("mensaje.actualizado", null,
+                        "Se realizó la actualización.", Locale.getDefault()));
+
         return "redirect:/gestionar/listadoProductos";
     }
 
-    //Modificar
+    // ==================================================
+    // MODIFICAR PRODUCTO
+    // ==================================================
     @GetMapping("/modificar/{id}")
     public String modificar(@PathVariable("id") Long id, Model model, RedirectAttributes ra) {
+
         Optional<Producto> productoOpt = productoService.getProducto(id);
+
         if (productoOpt.isEmpty()) {
-            ra.addFlashAttribute("error", messageSource.getMessage("producto.error01", null, "El producto no existe.", Locale.getDefault()));
+            ra.addFlashAttribute("error",
+                    messageSource.getMessage("producto.error01", null,
+                            "El producto no existe.", Locale.getDefault()));
             return "redirect:/gestionar/listadoProductos";
         }
+
         model.addAttribute("producto", productoOpt.get());
         model.addAttribute("categorias", categoriaService.listarActivas());
+
+        cargarNotificaciones(model);
+
         return "gestionar/modifica";
     }
 
-    //Eliminar
+    // ==================================================
+    // ELIMINAR (LÓGICO)
+    // ==================================================
     @PostMapping("/eliminar")
     public String eliminar(@RequestParam Long id, RedirectAttributes ra) {
         String titulo = "todoOk";
         String detalle = "mensaje.eliminado";
+
         try {
             Optional<Producto> productoOpt = productoService.getProducto(id);
+
             if (productoOpt.isEmpty()) {
-            throw new IllegalArgumentException("Producto no existe");
+                throw new IllegalArgumentException("Producto no existe");
             }
-            
+
             Producto producto = productoOpt.get();
-            producto.setEstado(false); 
-            productoService.saveOrUpdate(producto); 
+            producto.setEstado(false); // Eliminación lógica
+
+            productoService.saveOrUpdate(producto);
+
         } catch (IllegalArgumentException e) {
             titulo = "error";
             detalle = "producto.error01";
@@ -111,7 +175,12 @@ public class ProductoController {
             titulo = "error";
             detalle = "producto.error03";
         }
-        ra.addFlashAttribute(titulo, messageSource.getMessage(detalle, null, "Operación finalizada.", Locale.getDefault()));
+
+        ra.addFlashAttribute(titulo,
+                messageSource.getMessage(detalle, null,
+                        "Operación finalizada.", Locale.getDefault()));
+
         return "redirect:/gestionar/listadoProductos";
     }
 }
+

@@ -5,67 +5,87 @@
 
 package ferreteria.controller;
 
+import ferreteria.domain.CarritoItem;
+import ferreteria.service.CarritoService;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ferreteria.service.CarritoService;
+
+import ferreteria.domain.Usuario;
+import ferreteria.domain.CarritoItem;
+import ferreteria.domain.DetallePedido;
+import ferreteria.domain.Pedido;
+import ferreteria.domain.Producto;
+import ferreteria.service.DetallePedidoService;
+import ferreteria.service.PedidoService;
+import ferreteria.service.ProductoService;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/carrito")
 public class CarritoController {
-
+    
     @Autowired
     private CarritoService carritoService;
 
-    @GetMapping({ "", "/", "/listado" })
-    public String ver(Model model, HttpSession session) {
-        model.addAttribute("items", carritoService.getItems(session));
+    //Mostrar carrito
+    @GetMapping("/listado")
+    public String verCarrito(HttpSession session, Model model) {
+        List<CarritoItem> items = carritoService.getItems(session);
+        model.addAttribute("items", items);
         model.addAttribute("total", carritoService.getTotal(session));
         return "carrito/listado";
     }
 
-
+    //Agregar producto al carrito
     @PostMapping("/agregar")
-    public String agregar(@RequestParam Long productoId,
-                          @RequestParam(defaultValue = "1") Integer cantidad,
-                          HttpSession session,
-                          RedirectAttributes ra) {
+    public String agregarProducto(@RequestParam("productoId") Long productoId,
+                                  @RequestParam(name = "cantidad", defaultValue = "1") int cantidad,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
         carritoService.add(session, productoId, cantidad);
-        ra.addFlashAttribute("todoOk", "Producto agregado al carrito.");
-        return "redirect:/carrito";
+
+        redirectAttributes.addFlashAttribute("agregado", true);
+
+        return "redirect:/productos/detalle/" + productoId;
     }
 
+
+    //Actualizar cantidad
     @PostMapping("/actualizar")
-    public String actualizar(@RequestParam Long productoId,
-                             @RequestParam Integer cantidad,
-                             HttpSession session) {
+    public String actualizarCantidad(@RequestParam("productoId") Long productoId,
+                                     @RequestParam("cantidad") int cantidad,
+                                     HttpSession session) {
         carritoService.update(session, productoId, cantidad);
-        return "redirect:/carrito";
+        return "redirect:/carrito/listado";
     }
 
+    //Eliminar un producto
     @PostMapping("/eliminar")
-    public String eliminar(@RequestParam Long productoId,
-                           HttpSession session,
-                           RedirectAttributes ra) {
+    public String eliminar(@RequestParam("productoId") Long productoId,
+                           HttpSession session) {
         carritoService.remove(session, productoId);
-        ra.addFlashAttribute("todoOk", "Producto eliminado.");
-        return "redirect:/carrito";
+        return "redirect:/carrito/listado";
     }
 
+    //Vaciar carrito
     @PostMapping("/vaciar")
     public String vaciar(HttpSession session) {
         carritoService.clear(session);
-        return "redirect:/carrito";
+        return "redirect:/carrito/listado";
     }
     
-    //Test
-    @GetMapping("/demo")
-    public String demo(HttpSession session, RedirectAttributes ra) {
-        carritoService.seedDemo(session);
-        ra.addFlashAttribute("todoOk", "Se cargó un carrito de ejemplo.");
-        return "redirect:/carrito";
-    }
 }
