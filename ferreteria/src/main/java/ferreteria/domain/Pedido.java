@@ -14,4 +14,9 @@ public class Pedido {
     private String nombreCliente;
     private LocalDateTime fecha;
     private String estado;
+    
+    @ManyToOne
+@JoinColumn(name = "id_usuario", referencedColumnName = "idUsuario")
+private UsuarioPedido usuario;
+
 }

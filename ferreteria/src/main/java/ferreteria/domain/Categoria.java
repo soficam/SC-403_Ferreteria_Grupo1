@@ -1,6 +1,8 @@
 package ferreteria.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -17,6 +19,8 @@ public class Categoria implements Serializable {
     private Long idCategoria;
 
     @Column(nullable = false, length = 100)
+    @NotBlank(message = "El nombre no puede estar vacío.")
+    @Size(max = 100, message = "El nombre no puede tener más de 100 caracteres.")
     private String nombre;
 
     @Column(nullable = false)
