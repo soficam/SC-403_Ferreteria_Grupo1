@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <main class="container my-5">
+
+            <h2 class="mb-4 text-center">
+                <i class="fa-solid fa-credit-card me-2"></i> Pago de Compra
+            </h2>
+
+            <div th:if="${#lists.isEmpty(items)}" class="alert alert-warning text-center">
+                No hay productos en el carrito. <!-- Si el carrito está vacío -->
+            </div>
+
+            <!-- Contenido del pago -->
+            <div th:if="${!#lists.isEmpty(items)}" class="row g-4">
+
+                <!-- RESUMEN DEL PEDIDO -->
+                <div class="col-lg-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">Resumen del pedido</h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <!-- Desglose de productos -->
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center"
+                                    th:each="it : ${items}">
+                                    <div>
+                                        <strong th:text="${it.nombre}">Nombre</strong><br>
+                                        <small>Cant: <span th:text="${it.cantidad}">1</span></small>
+                                    </div>
+                                    <span>
+                                        ₡<span th:text="${#numbers.formatDecimal(it.subtotal,1,'POINT',2,'COMMA')}">0.00</span>
+                                    </span>
+                                </li>
+                            </ul>
+
+                            <!-- Total final -->
+                            <div class="border-top pt-3 mt-2">
+                                <h4 class="text-end">
+                                    Total:  
+                                    <span class="fw-bold text-success">
+                                        ₡<span th:text="${#numbers.formatDecimal(total,1,'POINT',2,'COMMA')}">0.00</span>
+                                    </span>
+                                </h4>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- FORMULARIO DE PAGO -->
+                <div class="col-lg-7">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">Datos de pago</h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <form th:action="@{/pago/checkout}" method="post">
+
+                                <!-- Nombre y correo -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nombre completo</label>
+                                        <input type="text" name="nombre" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Correo electrónico</label>
+                                        <input type="email" name="email" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <!-- Métodos de pago -->
+                                <label class="form-label fw-semibold mt-2">Método de pago</label>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="metodoPago"
+                                               value="tarjeta" id="pagoTarjeta" required>
+                                        <label class="form-check-label" for="pagoTarjeta">
+                                            Tarjeta de crédito / débito
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="metodoPago"
+                                               value="transferencia" id="pagoTransferencia">
+                                        <label class="form-check-label" for="pagoTransferencia">
+                                            Transferencia / SINPE móvil
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Campos si se selecciona tarjeta -->
+                                <div id="tarjetaFields" class="border rounded p-3 mb-3" style="display:none; background:#f8f9fa;">
+                                    <h6 class="fw-bold mb-3 text-dark">Datos de tarjeta</h6>
+
+                                    <label class="form-label">Número de tarjeta</label>
+                                    <input type="text" name="numTarjeta" class="form-control mb-2"
+                                           placeholder="XXXX-XXXX-XXXX-XXXX">
+
+                                    <label class="form-label">Fecha de expiración</label>
+                                    <input type="month" class="form-control mb-2">
+
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" placeholder="3 dígitos">
+                                </div>
+
+                                <!-- Campos si se selecciona transferencia -->
+                                <div id="transferenciaFields" class="border rounded p-3 mb-3"
+                                     style="display:none; background:#f8f9fa;">
+                                    <h6 class="fw-bold mb-3 text-dark">Confirmación de transferencia</h6>
+
+                                    <p class="small">
+                                        Realice una transferencia a la cuenta IBAN:<br>
+                                        <strong>CR12 0170 0000 1111 2222 33</strong>
+                                    </p>
+
+                                    <label class="form-label">Número de referencia</label>
+                                    <input type="text" name="refTransferencia" class="form-control"
+                                           placeholder="Ej: SINPE 89456123">
+                                </div>
+
+                                <!-- CONFIRMAR PAGO -->
+                                <div class="text-end">
+                                    <button class="btn btn-success btn-lg" type="submit">Confirmar pago</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+
+        <!-- JS para mostrar campos dinámicos -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const tarjetaRadio = document.getElementById("pagoTarjeta");
+                const transferenciaRadio = document.getElementById("pagoTransferencia");
+
+                const tarjetaFields = document.getElementById("tarjetaFields");
+                const transferenciaFields = document.getElementById("transferenciaFields");
+
+                function toggleFields() {
+                    tarjetaFields.style.display = tarjetaRadio.checked ? "block" : "none";
+                    transferenciaFields.style.display = transferenciaRadio.checked ? "block" : "none";
+                }
+
+                tarjetaRadio.addEventListener("change", toggleFields);
+                transferenciaRadio.addEventListener("change", toggleFields);
+            });
+        </script>
+
+    </body>
+</html>

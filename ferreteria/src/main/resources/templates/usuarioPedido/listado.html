@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+        <main class="container mt-5">
+            <h2 class="mb-4"><i class="fa-solid fa-boxes-stacked me-2"></i> Mis Pedidos</h2>
+
+            <div id="tablaCustom">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(pedidos)}">
+                            <td colspan="4" class="text-center">No tienes pedidos aún</td>
+                        </tr>
+                        <tr th:each="pedido : ${pedidos}">
+                            <td th:text="${pedido.idPedido}"></td>
+                            <td th:text="${#temporals.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${pedido.estado}"></td>
+                            <td>
+                                <a th:href="@{'/usuarioPedidos/detalle/' + ${pedido.idPedido}}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fa-solid fa-eye"></i> Ver detalle
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>

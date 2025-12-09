@@ -35,16 +35,33 @@
                             </p>
 
                             <div class="mt-3">
-                                <button class="btn btn-primary" type="button"
-                                        th:disabled="${producto.existencias == 0}">
-                                    <i class="fa-solid fa-cart-plus"></i> Agregar al carrito
-                                </button>
+                                <form method="post" th:action="@{/carrito/agregar}">
+                                    <input type="hidden" name="productoId" th:value="${producto.idProducto}" />
+                                    <div class="input-group" style="max-width: 220px;">
+                                        <input type="number"
+                                               class="form-control"
+                                               name="cantidad"
+                                               min="1"
+                                               value="1"
+                                               th:disabled="${producto.existencias == 0}" />
+                                        <button class="btn btn-primary"
+                                                type="submit"
+                                                th:disabled="${producto.existencias == 0}">
+                                            <i class="fa-solid fa-cart-plus"></i> Agregar al carrito
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </main>
+        <div th:if="${agregado}" class="alert alert-success text-center">
+            Producto agregado al carrito
+        </div>
+
 
         <footer th:replace="~{general/fragmentos :: footer}"></footer>
     </body>

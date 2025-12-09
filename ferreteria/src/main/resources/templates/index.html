@@ -1,15 +1,49 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"      
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-    <head th:replace="~{general/fragmentos :: head}"/>
-    <body>
-        <header th:replace="~{general/fragmentos :: header}"/>
 
-        <footer th:replace="~{general/fragmentos :: footer}"/>
-    </body>
+<head th:replace="~{general/fragmentos :: head}"></head>
+
+<body>
+
+    <header th:replace="~{general/fragmentos :: header}"></header>
+
+    <main class="container mt-4">
+
+        <!-- NOTIFICACIONES DE STOCK BAJO -->
+        <div th:if="${productosPorAgotarse != null and !productosPorAgotarse.isEmpty()}">
+            <div class="alert alert-warning">
+                <strong>Atención:</strong> Algunos productos están por agotarse.
+            </div>
+
+            <ul class="list-group mb-4">
+                <li class="list-group-item"
+                    th:each="p : ${productosPorAgotarse}">
+                    [[${p.nombre}]] — Existencias: [[${p.existencias}]]
+                </li>
+            </ul>
+        </div>
+
+        <h2 class="text-center mb-4">Catálogo de productos</h2>
+
+        <div class="row" th:if="${productos != null}">
+            <div class="col-md-4 mb-4" th:each="prod : ${productos}">
+                <div class="card h-100">
+                    <img th:src="@{${prod.rutaImagen}}" class="card-img-top" alt="Producto">
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title">[[${prod.nombre}]]</h5>
+                        <p>₡ [[${prod.precio}]]</p>
+                        <p class="text-muted">Existencias: [[${prod.existencias}]]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer th:replace="~{general/fragmentos :: footer}"></footer>
+
+</body>
 </html>

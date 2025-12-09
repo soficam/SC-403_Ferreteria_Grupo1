@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+ <!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentosAdmin :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentosAdmin :: header}"></header>
+        <main class="container mt-5">
+            <h2 class="mb-4"><i class="fa-solid fa-boxes-stacked me-2"></i> Historial Ventas</h2>
+            
+            <div class="mb-3">
+                <a href="/ventas/ordenarPrecioDesc" class="btn btn-outline-primary me-2">Ordenar por Precio</a>
+                <a href="/ventas/ordenarFechaVentaDesc" class="btn btn-outline-primary me-2">Ordenar por Fecha</a>
+                <a href="/ventas/reporte" class="btn btn-outline-primary">Generar Reporte</a>
+            </div>
+            
+            <div id="tablaCustom">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Fecha de Venta</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="venta : ${ventas}">
+                            <td th:text="${venta.idVenta}"></td>
+                            <td th:text="${venta.producto!= null ? venta.producto: 'Sin nombre'}"></td>
+                            <td th:text="${'₡'+venta.precio}"></td>
+                            <td th:text="${#temporals.format(venta.fechaVenta, 'dd/MM/yyyy HH:mm')}"></td>                                      
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <footer th:replace="~{general/fragmentosAdmin :: footer}"></footer>
+    </body>
+</html>

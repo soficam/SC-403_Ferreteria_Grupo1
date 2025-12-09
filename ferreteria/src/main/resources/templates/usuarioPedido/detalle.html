@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <main class="container mt-5">
+            <!-- Boton de volver -->
+            <a th:href="@{/usuarioPedidos}" class="btn btn-outline-secondary mb-4">
+                <i class="fa-solid fa-arrow-left me-1"></i> Volver a mis pedidos
+            </a>
+
+            <h2 class="mb-4">
+                <i class="fa-solid fa-box-open me-2"></i> Detalle del Pedido
+            </h2>
+
+            <!-- Pedido general -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p><strong>ID Pedido:</strong>
+                        <span th:text="${pedido.idPedido}"></span>
+                    </p>
+
+                    <p><strong>Cliente:</strong>
+                        <span th:text="${pedido.nombreCliente}"></span>
+                    </p>
+
+                    <p><strong>Fecha:</strong>
+                        <span th:text="${#temporals.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+
+                    <p><strong>Estado:</strong>
+                        <span th:text="${pedido.estado}"></span>
+                    </p>
+
+                    <!-- Mostrar total arriba si quieres -->
+                    <p th:if="${!#lists.isEmpty(detalles)}">
+                        <strong>Total del pedido:</strong>
+                        ₡<span th:text="${#numbers.formatDecimal(totalPedido,1,'POINT',2,'COMMA')}">0.00</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Pedido detalles-->
+            <div class="card mb-4">
+                <div class="card-header fw-bold">
+                    Productos del pedido
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Precio unitario</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- Si hay detalles -->
+                            <tr th:each="det : ${detalles}">
+                                <td th:text="${det.producto.nombre}">Producto</td>
+
+                                <td class="text-center" th:text="${det.cantidad}">1</td>
+
+                                <td class="text-end">
+                                    ₡<span th:text="${#numbers.formatDecimal(det.precioUnitario,1,'POINT',2,'COMMA')}">
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+                                    ₡<span th:text="${#numbers.formatDecimal(det.subtotal,1,'POINT',2,'COMMA')}">
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <!-- Si no hay-->
+                            <tr th:if="${#lists.isEmpty(detalles)}">
+                                <td colspan="4" class="text-center text-muted">
+                                    No hay productos registrados para este pedido.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                        <!-- Total -->
+                        <tfoot th:if="${!#lists.isEmpty(detalles)}">
+                            <tr>
+                                <th colspan="3" class="text-end">Total del pedido:</th>
+                                <th class="text-end">
+                                    ₡<span th:text="${#numbers.formatDecimal(totalPedido,1,'POINT',2,'COMMA')}">0.00</span>
+                                </th>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>

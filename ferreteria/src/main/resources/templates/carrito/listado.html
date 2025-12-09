@@ -9,17 +9,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <header th:replace="~{general/fragmentos :: header}"></header>
 
         <main class="container my-4">
-            <section class="py-4" id="carrito-hero" style="background:#c0b7b1;">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-8">
-                            <h1 class="h4 fw-bold mb-2 text-dark">Prueba del carrito</h1>
-                            <a class="btn btn-dark" th:href="@{/carrito/demo}">Cargar carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <h2 class="mb-3">Carrito de compras</h2>
 
             <div th:if="${#lists.isEmpty(items)}" class="alert alert-info">
@@ -95,7 +84,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         ₡<span th:text="${#numbers.formatDecimal(total,1,'POINT',2,'COMMA')}">0.00</span>
                     </div>
 
-                    <a class="btn btn-primary" th:href="@{/checkout}">Proceder al pago</a>
+                    <a class="btn btn-primary" th:href="@{/pago}">Proceder al pago</a>
                 </div>
             </div>
         </main>
