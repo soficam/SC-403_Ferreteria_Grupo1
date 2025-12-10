@@ -5,8 +5,10 @@
 
 package ferreteria.controller;
 
-import ferreteria.domain.Venta;
-import ferreteria.service.VentaService;
+import ferreteria.domain.DetallePedido;
+import ferreteria.domain.Pedido;
+import ferreteria.service.DetallePedidoService;
+import ferreteria.service.PedidoService;
 import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Locale;
@@ -25,6 +27,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.PdfPTable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -37,27 +40,26 @@ public class VentaController {
     int order = 0;
     
     @Autowired
-    private VentaService ventaService;
-    @Autowired 
-    private MessageSource messageSource;
+    private DetallePedidoService detallePedidoService;
+    
     
     @GetMapping
     public String listarVentas(Model model) {
-        model.addAttribute("ventas", ventaService.getVentas());
+        model.addAttribute("detallePedidos", detallePedidoService.getDetallePedido());
         return "ventas/historialVentas";
     }
-    
-    @GetMapping("/ordenarFechaVentaDesc")
-    public String listarVentasFechaVentaDesc(Model model) {
-        order = 1;
-        model.addAttribute("ventas", ventaService.getProductosFechaVentaDesc());
-        return "ventas/historialVentas";
-    }    
-    
+
     @GetMapping("/ordenarPrecioDesc")
     public String listarVentasPrecioDesc(Model model) {
+        order = 1;
+        model.addAttribute("detallePedidos", detallePedidoService.getProductosSubtotalDesc());
+        return "ventas/historialVentas";
+}
+    
+    @GetMapping("/ordenarFechaDesc")
+    public String listarVentasFechaDesc(Model model) {
         order = 2;
-        model.addAttribute("ventas", ventaService.getProductosPrecioDesc());
+        model.addAttribute("detallePedidos", detallePedidoService.getProductosFechaDesc());
         return "ventas/historialVentas";
 }
     
@@ -66,14 +68,14 @@ public void generarReporteVentas(HttpServletResponse response) throws IOExceptio
 
     response.setContentType("application/pdf");
     response.setHeader("Content-Disposition", "attachment; filename=Reporte_de_Ventas.pdf");
-
-    List<Venta> ventas = ventaService.getVentas();
+    
+    List<DetallePedido> detallePedidos = detallePedidoService.getDetallePedido();
     if (order == 1){
-        ventas = ventaService.getProductosFechaVentaDesc();
+        detallePedidos = detallePedidoService.getProductosSubtotalDesc();    
     }else if (order == 2){
-        ventas = ventaService.getProductosPrecioDesc();    
+        detallePedidos = detallePedidoService.getProductosFechaDesc();    
     }else{
-        ventas = ventaService.getVentas();
+        detallePedidos = detallePedidoService.getDetallePedido();
     }  
     
     Document pdf = new Document();
@@ -87,17 +89,18 @@ public void generarReporteVentas(HttpServletResponse response) throws IOExceptio
  
     PdfPTable tabla = new PdfPTable(4);
     tabla.addCell("ID");
+    tabla.addCell("Fecha");
     tabla.addCell("Producto");
-    tabla.addCell("Precio");
-    tabla.addCell("Fecha de Venta");
-    int total = 0;
+    tabla.addCell("Monto");    
+    BigDecimal total = BigDecimal.ZERO;
    
-    for (Venta v : ventas) {
-        tabla.addCell(String.valueOf(v.getIdVenta()));
-        tabla.addCell(v.getProducto() != null ? v.getProducto() : "Sin nombre");
-        tabla.addCell("₡" + v.getPrecio());
-        tabla.addCell(v.getFechaVenta().toString());
-        total += v.getPrecio();
+    for (DetallePedido dp : detallePedidos) {
+        
+        tabla.addCell(String.valueOf(dp.getPedido().getIdPedido()));        
+        tabla.addCell(String.valueOf(dp.getPedido().getFecha()));        
+        tabla.addCell(dp.getProducto().getNombre() != null ? dp.getProducto().getNombre() : "Sin nombre");
+        tabla.addCell("₡" + dp.getSubtotal());        
+        total = total.add(dp.getSubtotal());
     }
     pdf.add(tabla);
     pdf.add(new Paragraph(" "));
