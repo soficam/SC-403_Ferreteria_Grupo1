@@ -13,7 +13,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             
             <div class="mb-3">
                 <a href="/ventas/ordenarPrecioDesc" class="btn btn-outline-primary me-2">Ordenar por Precio</a>
-                <a href="/ventas/ordenarFechaVentaDesc" class="btn btn-outline-primary me-2">Ordenar por Fecha</a>
+                <a href="/ventas/ordenarFechaDesc" class="btn btn-outline-primary me-2">Ordenar por Fecha</a>
                 <a href="/ventas/reporte" class="btn btn-outline-primary">Generar Reporte</a>
             </div>
             
@@ -21,18 +21,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>ID</th>                            
+                            <th>Fecha</th>         
                             <th>Producto</th>
                             <th>Precio</th>
-                            <th>Fecha de Venta</th>                            
+                            
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="venta : ${ventas}">
-                            <td th:text="${venta.idVenta}"></td>
-                            <td th:text="${venta.producto!= null ? venta.producto: 'Sin nombre'}"></td>
-                            <td th:text="${'₡'+venta.precio}"></td>
-                            <td th:text="${#temporals.format(venta.fechaVenta, 'dd/MM/yyyy HH:mm')}"></td>                                      
+                        <tr th:each="detallePedido : ${detallePedidos}">
+                            <td th:text="${detallePedido.Pedido.idPedido}"></td>                            
+                            <td th:text="${detallePedido.Pedido.fecha}"></td>
+                            <td th:text="${detallePedido.Producto.nombre}"></td>
+                            <td th:text="${'₡'+detallePedido.subtotal}"></td>                            
                         </tr>
                     </tbody>
                 </table>
