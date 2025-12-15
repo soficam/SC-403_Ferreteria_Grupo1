@@ -39,7 +39,7 @@ public class AdminController {
         model.addAttribute("mensaje", "Usuario registrado exitosamente");
         
         // Redirección al panel admin
-        return "redirect:/general/fragmentosAdmin";
+        return "redirect:/admin";
     }
 }
 
